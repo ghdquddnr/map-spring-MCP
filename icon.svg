@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="20" fill="#064e3b"/>
+  <!-- Spring leaf -->
+  <path d="M50 16 C59 24, 70 22, 68 35 C76 27, 78 42, 65 46 C72 57, 61 65, 50 63 C39 65, 28 57, 35 46 C22 42, 24 27, 32 35 C30 22, 41 24, 50 16Z" fill="#34d399"/>
+  <!-- DB cylinder top -->
+  <ellipse cx="50" cy="54" rx="14" ry="5" fill="#065f46"/>
+  <!-- DB cylinder body -->
+  <rect x="36" y="54" width="28" height="16" fill="#065f46"/>
+  <!-- DB cylinder bottom -->
+  <ellipse cx="50" cy="70" rx="14" ry="5" fill="#047857"/>
+  <!-- DB stripes -->
+  <ellipse cx="50" cy="59" rx="14" ry="5" fill="none" stroke="#34d399" stroke-width="0.8" opacity="0.5"/>
+  <ellipse cx="50" cy="64" rx="14" ry="5" fill="none" stroke="#34d399" stroke-width="0.8" opacity="0.5"/>
+</svg>

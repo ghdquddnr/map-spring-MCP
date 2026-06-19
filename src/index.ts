@@ -18,8 +18,8 @@ import {
 // Load environment variables from .env if present
 dotenv.config();
 
-let url = process.env.DATABASE_URL || process.env.URL;
-let ddlPath = process.env.DDL_PATH || process.env.DDL_DIR;
+let url = process.env.MAPSPRING_URL || process.env.DATABASE_URL || process.env.URL;
+let ddlPath = process.env.MAPSPRING_DDL_PATH || process.env.DDL_PATH || process.env.DDL_DIR;
 
 // Parse CLI arguments
 for (let i = 2; i < process.argv.length; i++) {
@@ -144,7 +144,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'list_tables',
-        description: 'List all database tables available in the configured schema (Online DB or Offline DDL folder).',
+        description: 'List all database tables available in the currently configured data source. In online mode, queries the connected database directly. In offline mode, reads table names from parsed DDL files in the configured directory. Returns a JSON array of table name strings.',
+        annotations: {
+          title: 'List Tables',
+          readOnlyHint: true,
+          openWorldHint: false,
+        },
         inputSchema: {
           type: 'object',
           properties: {},
@@ -152,13 +157,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'get_table_schema',
-        description: 'Resolve and return the physical schema of a database table formatted as a compact Markdown table.',
+        description: 'Retrieve the complete physical schema of a specific database table. Returns column names, data types, nullable constraints, Java field names (camelCase), and Korean business comments in a formatted Markdown table. Use this before generating code to understand the table structure.',
+        annotations: {
+          title: 'Get Table Schema',
+          readOnlyHint: true,
+          openWorldHint: false,
+        },
         inputSchema: {
           type: 'object',
           properties: {
             table_name: {
               type: 'string',
-              description: 'The physical name of the database table (e.g. TB_SETTLE_MASTER).',
+              description: 'Physical name of the database table in uppercase (e.g., TB_SETTLE_MASTER, TB_USER_INFO, TB_ORDER_DETAIL). Use list_tables first if the exact name is unknown.',
             },
           },
           required: ['table_name'],
@@ -166,17 +176,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'generate_mybatis_mapper',
-        description: 'Generate MyBatis DTO and XML resultMap mapping code for a database table.',
+        description: 'Generate ready-to-use MyBatis integration code for a database table. Produces two artifacts: (1) an XML ResultMap that maps columns to Java fields, and (2) a Java DTO class with camelCase field names and appropriate Java types. Output is based on the actual live schema — no manual mapping required.',
+        annotations: {
+          title: 'Generate MyBatis Mapper',
+          readOnlyHint: true,
+          openWorldHint: false,
+        },
         inputSchema: {
           type: 'object',
           properties: {
             table_name: {
               type: 'string',
-              description: 'The physical name of the table.',
+              description: 'Physical name of the database table to generate code for (e.g., TB_SETTLE_MASTER). The table must exist in the configured database or DDL directory.',
             },
             dto_package: {
               type: 'string',
-              description: 'Target Java package name for the DTO class. Defaults to "com.company.project.domain.dto".',
+              description: 'Java package path for the generated DTO class (e.g., com.example.settlement.domain.dto). If omitted, defaults to com.company.project.domain.dto.',
             },
           },
           required: ['table_name'],
@@ -184,17 +199,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'generate_jpa_entity',
-        description: 'Generate a Spring Boot JPA Entity class for a database table.',
+        description: 'Generate a Spring Data JPA Entity class for a database table. Includes @Entity, @Table, @Column, @Id, and @GeneratedValue annotations derived from the actual database schema. The generated class is compatible with Spring Boot and Hibernate. Column constraints (nullable, length) are reflected in the annotations.',
+        annotations: {
+          title: 'Generate JPA Entity',
+          readOnlyHint: true,
+          openWorldHint: false,
+        },
         inputSchema: {
           type: 'object',
           properties: {
             table_name: {
               type: 'string',
-              description: 'The physical name of the table.',
+              description: 'Physical name of the database table to generate the JPA Entity for (e.g., TB_USER_INFO). The table must exist in the configured database or DDL directory.',
             },
             entity_package: {
               type: 'string',
-              description: 'Target Java package name for the Entity class. Defaults to "com.company.project.domain.entity".',
+              description: 'Java package path for the generated Entity class (e.g., com.example.settlement.domain.entity). If omitted, defaults to com.company.project.domain.entity.',
             },
           },
           required: ['table_name'],

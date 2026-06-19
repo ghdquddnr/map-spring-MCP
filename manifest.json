@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.2",
+  "name": "mapspring-mcp",
+  "display_name": "MapSpring MCP",
+  "version": "1.0.0",
+  "description": "Database schema exploration and Spring code generation for Korean enterprise environments. Connects to PostgreSQL, MySQL, Oracle, Tibero, and MSSQL directly, or parses local DDL files for air-gapped (network-isolated) deployments. Automatically generates MyBatis ResultMap, DTO classes, and JPA Entity code from real database schema.",
+  "homepage": "https://github.com/ghdquddnr/map-spring-MCP",
+  "icon": "icon.png",
+  "author": {
+    "name": "ghdquddnr",
+    "url": "https://github.com/ghdquddnr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghdquddnr/map-spring-MCP"
+  },
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "MAPSPRING_URL": "${user_config.url}",
+        "MAPSPRING_DDL_PATH": "${user_config.ddl_path}"
+      }
+    }
+  },
+  "user_config": {
+    "url": {
+      "type": "string",
+      "title": "Database URL (Online Mode)",
+      "description": "Connection URL for direct database access (e.g., postgresql://user:pass@host:5432/db, mysql://user:pass@host:3306/db). Leave empty when using offline DDL mode.",
+      "required": false
+    },
+    "ddl_path": {
+      "type": "string",
+      "title": "DDL Directory Path (Offline Mode)",
+      "description": "Absolute path to a directory containing .sql or .ddl schema files. Use this in air-gapped environments where direct DB access is not available. Leave empty when using online database mode.",
+      "required": false
+    }
+  }
+}
