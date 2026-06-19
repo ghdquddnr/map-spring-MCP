@@ -1,10 +1,13 @@
 {
-  "manifest_version": "0.2",
+  "manifest_version": "0.4",
   "name": "mapspring-mcp",
   "display_name": "MapSpring MCP",
   "version": "1.0.0",
   "description": "Database schema exploration and Spring code generation for Korean enterprise environments. Connects to PostgreSQL, MySQL, Oracle, Tibero, and MSSQL directly, or parses local DDL files for air-gapped (network-isolated) deployments. Automatically generates MyBatis ResultMap, DTO classes, and JPA Entity code from real database schema.",
+  "long_description": "MapSpring is an MCP server specialized for Korean enterprise Spring Boot projects. It supports two execution modes — online direct database connection and offline DDL file parsing for network-isolated (망분리) environments. The code generation engine produces MyBatis ResultMap XML, Java DTO classes, and JPA Entity classes with full annotations (@Entity, @Table, @Column, @Id, @NotNull, @Size) directly from live schema metadata. Designed to eliminate manual column-to-field mapping work in legacy SI projects. Supports PostgreSQL, MySQL, Oracle, Tibero, and MSSQL.",
   "homepage": "https://github.com/ghdquddnr/map-spring-MCP",
+  "documentation": "https://github.com/ghdquddnr/map-spring-MCP#readme",
+  "support": "https://github.com/ghdquddnr/map-spring-MCP/issues",
   "icon": "icon.png",
   "author": {
     "name": "ghdquddnr",
@@ -15,6 +18,30 @@
     "url": "https://github.com/ghdquddnr/map-spring-MCP"
   },
   "license": "MIT",
+  "keywords": [
+    "spring-boot",
+    "mybatis",
+    "jpa",
+    "code-generation",
+    "database-schema",
+    "postgresql",
+    "oracle",
+    "mysql",
+    "mssql",
+    "tibero",
+    "korean-enterprise",
+    "air-gapped",
+    "ddl-parser",
+    "entity",
+    "dto"
+  ],
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
   "server": {
     "type": "node",
     "entry_point": "dist/index.js",
@@ -35,10 +62,29 @@
       "required": false
     },
     "ddl_path": {
-      "type": "string",
+      "type": "directory",
       "title": "DDL Directory Path (Offline Mode)",
-      "description": "Absolute path to a directory containing .sql or .ddl schema files. Use this in air-gapped environments where direct DB access is not available. Leave empty when using online database mode.",
+      "description": "Path to a directory containing .sql or .ddl schema files. Use this in air-gapped environments where direct DB access is not available. Leave empty when using online database mode.",
       "required": false
     }
-  }
+  },
+  "tools": [
+    {
+      "name": "list_tables",
+      "description": "List all database tables available in the currently configured data source. In online mode, queries the connected database directly. In offline mode, reads table names from parsed DDL files in the configured directory. Returns a JSON array of table name strings."
+    },
+    {
+      "name": "get_table_schema",
+      "description": "Retrieve the complete physical schema of a specific database table. Returns column names, data types, nullable constraints, Java field names (camelCase), and Korean business comments in a formatted Markdown table. Use this before generating code to understand the table structure."
+    },
+    {
+      "name": "generate_mybatis_mapper",
+      "description": "Generate ready-to-use MyBatis integration code for a database table. Produces two artifacts: (1) an XML ResultMap that maps columns to Java fields, and (2) a Java DTO class with camelCase field names and appropriate Java types. Output is based on the actual live schema — no manual mapping required."
+    },
+    {
+      "name": "generate_jpa_entity",
+      "description": "Generate a Spring Data JPA Entity class for a database table. Includes @Entity, @Table, @Column, @Id, and @GeneratedValue annotations derived from the actual database schema. Compatible with Spring Boot and Hibernate. Column constraints (nullable, length) are reflected in @Column and Bean Validation annotations (@NotNull, @Size)."
+    }
+  ],
+  "tools_generated": false
 }

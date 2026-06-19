@@ -148,6 +148,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         annotations: {
           title: 'List Tables',
           readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
           openWorldHint: false,
         },
         inputSchema: {
@@ -161,6 +163,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         annotations: {
           title: 'Get Table Schema',
           readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
           openWorldHint: false,
         },
         inputSchema: {
@@ -180,6 +184,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         annotations: {
           title: 'Generate MyBatis Mapper',
           readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
           openWorldHint: false,
         },
         inputSchema: {
@@ -203,6 +209,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         annotations: {
           title: 'Generate JPA Entity',
           readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
           openWorldHint: false,
         },
         inputSchema: {
